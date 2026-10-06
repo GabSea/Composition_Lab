@@ -51,7 +51,7 @@ void run_menu() {
                 break;
             case 4:
                 for (int i = 0; i < bank_accounts.size(); i++) {
-                    BankAccount::print_details(*bank_accounts[i]);
+                    bank_accounts[i]->print_details();
                 }
                 break;
             case -1:
@@ -104,7 +104,7 @@ int sub_menu(int choice, int type) {
     }
 
     std::cout << "------------Account Menu-----------\n"
-                 "Editing " << bank_accounts.at(choice).getAccountHolderName() << "'s " << account_type << "..." << std::endl;
+                 "Editing " << bank_accounts.at(choice)->getAccountHolderName() << "'s " << account_type << "..." << std::endl;
     std::cout << "Enter an input to choose what to do:\n"
                  "- 1. Deposit\n"
                  "- 2. Withdraw\n"
@@ -152,7 +152,7 @@ void erase_bank_account() {
 
     for (int i = 0; i < bank_accounts.size(); i++) {
         std::cout << "ID: " << i << ":\n";
-        BankAccount::print_details(bank_accounts[i]);
+        bank_accounts[i]->print_details();
     }
 
     std::cout << "Choose ID to delete" << std::endl;
@@ -164,7 +164,7 @@ void erase_bank_account() {
     }
 
     std::cout << "Confirm deletion of:\n";
-    BankAccount::print_details(bank_accounts[deletion_choice]);
+    bank_accounts[deletion_choice]->print_details();
     std::cout << "Type \"1\" to confirm." << std::endl;
 
     std::cin >> confirmation;
@@ -184,7 +184,7 @@ void edit_bank_account() {
     std::cin >> acc_num;
 
     for (int i = 0; i < bank_accounts.size(); i++) {
-        if (acc_num == bank_accounts[i].getAccountNumber()) {
+        if (acc_num == bank_accounts[i]->getAccountNumber()) {
             editing = i;
         }
     }
@@ -194,13 +194,13 @@ void edit_bank_account() {
         return;
     }
 
-    if (bank_accounts[editing].acc_type == "Default") {
+    if (bank_accounts[editing]->acc_type == "Default") {
         edit_default_account(editing);
     }
-    if (bank_accounts[editing].acc_type == "Checking") {
+    if (bank_accounts[editing]->acc_type == "Checking") {
         edit_checkings_account(editing);
     }
-    if (bank_accounts[editing].acc_type == "Savings") {
+    if (bank_accounts[editing]->acc_type == "Savings") {
         edit_savings_account(editing);
     }
 
@@ -221,20 +221,20 @@ void edit_default_account(int editing) {
             case 1:
                 std::cout << "Enter deposit amnt: " << std::endl;
                 std::cin >> deposit;
-                bank_accounts[editing] += deposit;
+                *bank_accounts[editing] += deposit;
                 break;
             case 2:
                 std::cout << "Enter withdraw amnt: " << std::endl;
                 std::cin >> withdraw;
-                bank_accounts[editing] -= withdraw;
+                *bank_accounts[editing] -= withdraw;
                 break;
             case 3:
                 std::cout << "Enter new name: " << std::endl;
                 std::cin >> n;
-                bank_accounts[editing].setAccountHolderName(n);
+                bank_accounts[editing]->setAccountHolderName(n);
                 break;
             case 4:
-                BankAccount::print_details(bank_accounts[editing]);
+                bank_accounts[editing]->print_details();
                 break;
             case -1:
                 std::cout << "Exiting..." << std::endl;
@@ -259,20 +259,20 @@ void edit_checkings_account(int editing) {
             case 1:
                 std::cout << "Enter deposit amnt: " << std::endl;
                 std::cin >> deposit;
-                bank_accounts[editing] += deposit;
+                *bank_accounts[editing] += deposit;
                 break;
             case 2:
                 std::cout << "Enter withdraw amnt: " << std::endl;
                 std::cin >> withdraw;
-                bank_accounts[editing] -= withdraw;
+                *bank_accounts[editing] -= withdraw;
                 break;
             case 3:
                 std::cout << "Enter new name: " << std::endl;
                 std::cin >> n;
-                bank_accounts[editing].setAccountHolderName(n);
+                bank_accounts[editing]->setAccountHolderName(n);
                 break;
             case 4:
-                CheckingAccount::print_details(bank_accounts[editing]);
+                bank_accounts[editing]->print_details();
                 break;
             case -1:
                 std::cout << "Exiting..." << std::endl;
@@ -297,23 +297,24 @@ void edit_savings_account(int editing) {
             case 1:
                 std::cout << "Enter deposit amnt: " << std::endl;
                 std::cin >> deposit;
-                bank_accounts[editing] += deposit;
+                *bank_accounts[editing] += deposit;
                 break;
             case 2:
                 std::cout << "Enter withdraw amnt: " << std::endl;
                 std::cin >> withdraw;
-                bank_accounts[editing] -= withdraw;
+                *bank_accounts[editing] -= withdraw;
                 break;
             case 3:
                 std::cout << "Enter new name: " << std::endl;
                 std::cin >> n;
-                bank_accounts[editing].setAccountHolderName(n);
+                bank_accounts[editing]->setAccountHolderName(n);
                 break;
             case 4:
-                BankAccount::print_details(bank_accounts[editing]);
+                bank_accounts[editing]->print_details();
                 break;
             case 5:
-
+                dynamic_cast<SavingsAccount*>(bank_accounts[editing])->calculateInterest();
+                break;
             case -1:
                 std::cout << "Exiting..." << std::endl;
                 break;

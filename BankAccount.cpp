@@ -129,13 +129,13 @@ bool BankAccount::operator>(const BankAccount &other) {
 
 
 
-void BankAccount::print_details(const BankAccount &acc) {
-    std::cout << acc.acc_holder_name << "'s Account:\n"
-                 "#:        " << acc.acc_num << "\n"
-                 "Balance:  " << acc.balance << "\n" << std::endl;
+void BankAccount::print_details() const{
+    std::cout << this->acc_holder_name << "'s Account:\n"
+                 "#:        " << this->acc_num << "\n"
+                 "Balance:  " << this->balance << "\n" << std::endl;
 }
 
-BankAccount BankAccount::createAccountFromInput() {
+BankAccount* BankAccount::createAccountFromInput() {
     std::string name, acc_num = std::to_string(NEXT_ID);
     double balance;
 
@@ -144,12 +144,12 @@ BankAccount BankAccount::createAccountFromInput() {
     std::cout << "Enter balance: " << std::endl;
     std::cin >> balance;
 
-    BankAccount acc;
-    acc.setAccountNumber(acc_num);
-    acc.setBalance(balance);
-    acc.setAccountHolderName(name);
+    BankAccount* acc = new BankAccount();
+    acc->setAccountNumber(acc_num);
+    acc->setBalance(balance);
+    acc->setAccountHolderName(name);
 
-    print_details(acc);
+    acc->print_details();
 
     return acc;
 }
@@ -166,7 +166,7 @@ CheckingAccount::CheckingAccount() {
     NEXT_ID++;
 }
 
-CheckingAccount CheckingAccount::createCheckingAccountFromInput() {
+CheckingAccount* CheckingAccount::createCheckingAccountFromInput() {
     std::string name, acc_num = std::to_string(NEXT_ID);
     double balance;
 
@@ -175,23 +175,23 @@ CheckingAccount CheckingAccount::createCheckingAccountFromInput() {
     std::cout << "Enter balance: " << std::endl;
     std::cin >> balance;
 
-    CheckingAccount acc;
-    acc.setAccountNumber(acc_num);
-    acc.setBalance(balance);
-    acc.setAccountHolderName(name);
+    CheckingAccount* acc = new CheckingAccount();
+    acc->setAccountNumber(acc_num);
+    acc->setBalance(balance);
+    acc->setAccountHolderName(name);
 
-    acc.setTransactionFee(5.0);
+    acc->setTransactionFee(5.0);
 
-    print_details(acc);
+    acc->print_details();
 
     return acc;
 }
 
-void CheckingAccount::print_details(const CheckingAccount &acc) {
-    std::cout << acc.acc_holder_name << "'s Checking Account:\n"
-                 "#:        " << acc.acc_num << "\n"
-                 "Balance:  " << acc.balance << "\n"
-                 "Transaction Fee:  " << acc.transaction_fee << std::endl;
+void CheckingAccount::print_details() const {
+    std::cout << this->acc_holder_name << "'s Checking Account:\n"
+                 "#:        " << this->acc_num << "\n"
+                 "Balance:  " << this->balance << "\n"
+                 "Transaction Fee:  " << this->transaction_fee << "\n" << std::endl;
 }
 
 double CheckingAccount::getTransactionFee() {
@@ -246,7 +246,7 @@ SavingsAccount::SavingsAccount() {
     NEXT_ID++;
 }
 
-SavingsAccount SavingsAccount::createSavingsAccountFromInput() {
+SavingsAccount* SavingsAccount::createSavingsAccountFromInput() {
     std::string name, acc_num = std::to_string(NEXT_ID);
     double balance, interest;
 
@@ -257,13 +257,13 @@ SavingsAccount SavingsAccount::createSavingsAccountFromInput() {
     std::cout << "Enter interest rate: " << std::endl;
     std::cin >> interest;
 
-    SavingsAccount acc;
-    acc.setAccountNumber(acc_num);
-    acc.setBalance(balance);
-    acc.setAccountHolderName(name);
-    acc.setInterest(interest);
+    SavingsAccount* acc = new SavingsAccount();
+    acc->setAccountNumber(acc_num);
+    acc->setBalance(balance);
+    acc->setAccountHolderName(name);
+    acc->setInterest(interest);
 
-    print_details(acc);
+    acc->print_details();
 
     return acc;
 }
@@ -280,9 +280,9 @@ void SavingsAccount::calculateInterest() {
     setBalance(this->balance + this->interest_rate);
 }
 
-void SavingsAccount::print_details(const SavingsAccount &acc) {
-    std::cout << acc.acc_holder_name << "'s Savings Account:\n"
-                 "#:        " << acc.acc_num << "\n"
-                 "Balance:  " << acc.balance << "\n"
-                 "Interest Rate:  " << acc.interest_rate << std::endl;
+void SavingsAccount::print_details() const {
+    std::cout << this->acc_holder_name << "'s Savings Account:\n"
+                 "#:        " << this->acc_num << "\n"
+                 "Balance:  " << this->balance << "\n"
+                 "Interest Rate:  " << this->interest_rate << "\n" <<  std::endl;
 }

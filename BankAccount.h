@@ -31,8 +31,8 @@ public:
     double withdraw(double);
     void void_withdraw(double amount);
 
-    static void print_details(const BankAccount &acc);
-    static BankAccount createAccountFromInput();
+    virtual void print_details() const;
+    static BankAccount* createAccountFromInput();
 
     std::string acc_type;
     static int NEXT_ID;
@@ -55,8 +55,8 @@ public:
     double withdraw(double);
     void void_withdraw(double amount);
 
-    static CheckingAccount createCheckingAccountFromInput();
-    static void print_details(const CheckingAccount &acc);
+    static CheckingAccount* createCheckingAccountFromInput();
+    void print_details() const override;
 private:
     double transaction_fee;
 };
@@ -70,8 +70,8 @@ public:
     double getInterest();
     void setInterest(double);
 
-    static SavingsAccount createSavingsAccountFromInput();
-    static void print_details(const SavingsAccount &acc);
+    static SavingsAccount* createSavingsAccountFromInput();
+    void print_details() const override;
 private:
     double interest_rate;
 };
