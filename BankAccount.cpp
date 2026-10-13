@@ -16,6 +16,7 @@
 
 
 #include "BankAccount.h"
+#include <ctime>
 
 BankAccount::BankAccount() {
     this->acc_num = std::to_string(NEXT_ID);
@@ -29,6 +30,7 @@ BankAccount::BankAccount(const BankAccount& other) {
     this->acc_num = other.acc_num;
     this->acc_holder_name = other.acc_holder_name;
     this->balance = other.balance;
+    this->transaction_history = other.transaction_history;
 }
 
 int BankAccount::NEXT_ID = 0;
@@ -61,12 +63,14 @@ void BankAccount::deposit(double amount) {
         return;
     }
     this->balance += amount;
+
+    add_transaction("Deposit", amount);
 }
 double BankAccount::withdraw(double amount) {
     double current_balance = this->balance;
     double balance_taken = amount;
 
-    if (current_balance > amount) {
+    if (current_balance < amount) {
         std::cout << "The amount is greater than the account balance.\nWithdraw canceled." << std::endl;
         return 0.0;
     }
@@ -76,12 +80,14 @@ double BankAccount::withdraw(double amount) {
     }
 
     this->balance -= amount;
+    add_transaction("Withdrawl", -amount);
+
     return balance_taken;
 }
 void BankAccount::void_withdraw(double amount) {
     double current_balance = this->balance;
 
-    if (current_balance > amount) {
+    if (current_balance < amount) {
         std::cout << "The amount is greater than the account balance.\nWithdraw canceled." << std::endl;
         return;
     }
@@ -91,6 +97,7 @@ void BankAccount::void_withdraw(double amount) {
     }
 
     this->balance -= amount;
+    add_transaction("Withdrawl", -amount);
 }
 
 BankAccount& BankAccount::operator=(const BankAccount& other) {
@@ -154,6 +161,34 @@ BankAccount* BankAccount::createAccountFromInput() {
     return acc;
 }
 
+void BankAccount::add_transaction(std::string type, double amount) {
+    std::time_t ts;
+    std::time(&ts);
+
+    std::string timestamp = ctime(&ts);
+
+    Transaction T;
+    T.amount = amount;
+    T.timestamp = timestamp;
+    T.type = type;
+
+    this->transaction_history.push_back(T);
+}
+
+void BankAccount::print_transaction_history() {
+
+    std::cout << this->acc_holder_name << "'s Transaction History:\n";
+
+    for (int i = 0; i < this->transaction_history.size(); i++) {
+        std::cout << "__________________________________\n"
+        << "Time: " << this->transaction_history[i].timestamp << "\n"
+        << "Amount: " << this->transaction_history[i].amount << "\n"
+        << "Type: " << this->transaction_history[i].type << std::endl;
+    }
+
+}
+
+
 // Checking Accounts
 
 CheckingAccount::CheckingAccount() {
@@ -206,7 +241,7 @@ double CheckingAccount::withdraw(double amount) {
     double current_balance = this->balance;
     double balance_taken = (amount + this->transaction_fee);
 
-    if (current_balance > (amount + this->transaction_fee)) {
+    if (current_balance < (amount + this->transaction_fee)) {
         std::cout << "The amount is greater than the account balance plus the transaction fees.\nWithdraw canceled." << std::endl;
         return 0.0;
     }
@@ -216,13 +251,14 @@ double CheckingAccount::withdraw(double amount) {
     }
 
     this->balance -= (amount + this->transaction_fee);
+    add_transaction("Withdrawl", -amount);
     return balance_taken;
 }
 
 void CheckingAccount::void_withdraw(double amount) {
     double current_balance = this->balance;
 
-    if (current_balance > (amount + this->transaction_fee)) {
+    if (current_balance < (amount + this->transaction_fee)) {
         std::cout << "The amount is greater than the account balance plus the transaction fees.\nWithdraw canceled." << std::endl;
         return;
     }
@@ -232,6 +268,7 @@ void CheckingAccount::void_withdraw(double amount) {
     }
 
     this->balance -= (amount + this->transaction_fee);
+    add_transaction("Withdrawl", -amount);
 }
 
 // savings account
