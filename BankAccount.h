@@ -6,6 +6,8 @@
 #define UNTITLED_BANKACCOUNT_H
 
 #include <iostream>
+#include <vector>
+
 class BankAccount {
 public:
     BankAccount();
@@ -31,17 +33,28 @@ public:
     double withdraw(double);
     void void_withdraw(double amount);
 
+    void add_transaction(std::string, double);
+    void print_transaction_history();
+
     virtual void print_details() const;
     static BankAccount* createAccountFromInput();
 
     std::string acc_type;
     static int NEXT_ID;
+
+    struct Transaction {
+        double amount;
+        std::string type, timestamp;
+    };
 protected:
     std::string acc_num, acc_holder_name;
     double balance;
 
     void setAccountNumber(const std::string&);
     void setBalance(double);
+
+private:
+    std::vector<Transaction> transaction_history;
 };
 
 
